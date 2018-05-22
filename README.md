@@ -1,6 +1,6 @@
 Pipeline overview:
 
-CPTAC3 batch#3 WGS BAM files were divided into 4 groups by tumor (31 UCEC tumors, 19 CCRC tumors) or normal sample (blood normal only, 31 UCEC normals, 19 CCRC normals) and by cancer types. Genome STRiP deletion discovery pipeline and CNV discovery pipeline implemented on 4 groups separately.
+CPTAC3 batch#3 WGS BAM files were divided into 4 groups by tumor (11 LUAD tumors or normal sample (11 blood normal samples) and by cancer types. Genome STRiP deletion discovery pipeline and CNV discovery pipeline implemented on 4 groups separately.
 
 Genome STRiP deletion discovery pipeline used Genome STRiP 2.0 SVPreprocess, SVDiscovery, SVGenotyper Queue scripts to generate deletion calls targeting 100 to 1M bps.
 
@@ -12,5 +12,5 @@ GATK CombineVariants was used to combine callsets from deletion discovery pipeli
 Suggested downstream filtering:
 RedundancyAnnotator(used to detect and filter redundant structural variation calls with similar coordinates in outputs from deletion discovery pipeline and CNV discovery pipeline) 
 
-Processing scripts(@https://github.com/yigewu/genomestrip.b3): 
+Processing scripts(@https://github.com/yigewu/genomestrip.LUAD.b1): 
 refer to main.sh for coordination of specific scripts for each step

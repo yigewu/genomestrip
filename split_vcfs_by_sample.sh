@@ -24,7 +24,7 @@ refFile=${refDir}"Homo_sapiens_assembly19.fasta"
 
 # output directory
 batchName=$6
-wgs_table="CPTAC3."${batchName}".BamMap.dat"
+bamMapFile=$7
 runDir=${mainRunDir}"outputs/"${batchName}"/"${t}"_"${c}"/"
 outDir=${runDir}"vcfsbysample/"
 inVCF=${outDir}"del_cnv_genotype_"${t}"_"${c}"_"${mergeoption}".vcf"
@@ -44,7 +44,7 @@ cp $0 ${outDir}/
 while read p; do
 	sampID=$(echo ${p} | awk -F ' ' '{print $1}')
 	echo ${sampID}
-	partID=$(grep ${sampID} ${inputDir}${wgs_table} | awk -F ' ' '{print $2}' | uniq)
+	partID=$(grep ${sampID} ${inputDir}${bamMapFile} | awk -F ' ' '{print $2}' | uniq)
 	echo ${partID}
 	if [ "${t}" == "tumor" ]; then
 		outVCF=${partID}".T.WGS.CNV.GenomeSTRiP.vcf"

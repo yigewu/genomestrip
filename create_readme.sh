@@ -7,9 +7,9 @@ mainScriptDir=$4
 toolName=$5
 readmeFile=${mainScriptDir}"README.md"
 
-echo "${batchName} ${bamType} CNV pipeline ${version} overview:" > ${readmeFile}
+echo "${batchName} ${bamType} CNV pipeline v${version} overview:" > ${readmeFile}
 echo "" >> ${readmeFile}
-echo "${batchName} ${bamType} BAM files divided into groups by sample type (tumors sample or  blood normal samples, each cancer type is also processed separately).  Genome STRiP deletion discovery pipeline and CNV discovery pipeline implemented on each group seperately." >> ${readmeFile}
+echo "${batchName} ${bamType} BAM files divided into groups by sample type (tumors sample or blood normal samples, each cancer type is also processed separately).  Genome STRiP deletion discovery pipeline and CNV discovery pipeline implemented on each group seperately." >> ${readmeFile}
 echo "" >> ${readmeFile}
 echo "Genome STRiP deletion discovery pipeline used Genome STRiP 2.0 SVPreprocess, SVDiscovery, SVGenotyper Queue scripts to generate deletion calls targeting 100 to 1M bps." >> ${readmeFile}
 echo "" >> ${readmeFile}

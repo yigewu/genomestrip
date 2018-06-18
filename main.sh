@@ -139,6 +139,10 @@ for t in tumor normal; do
         done<${cancerType}
 done
 
+## create README file
+cm="bash create_readme.sh ${batchName} ${bamType} ${version} ${mainScriptDir} ${toolName}"
+${cm}
+
 ## push scripts to github
 cm="bash push_git.sh ${batchName} ${version}"
 echo ${cm}

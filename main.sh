@@ -140,7 +140,7 @@ for t in tumor normal; do
 done
 
 ## create README file
-cm="bash create_readme.sh ${batchName} ${bamType} ${version} ${mainScriptDir} ${toolName}"
+cm="bash create_readme.sh ${batchName} ${bamType} ${version} ${mainScriptDir} ${toolName} ${mainRunDir}"
 ${cm}
 
 ## push scripts to github

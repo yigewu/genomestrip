@@ -5,7 +5,9 @@ bamType=$2
 version=$3
 mainScriptDir=$4
 toolName=$5
+mainRunDir=$6
 readmeFile=${mainScriptDir}"README.md"
+subdeliverDir=${mainRunDir}"deliverables/"${batchName}"/"
 
 echo "${batchName} ${bamType} CNV pipeline v${version} overview:" > ${readmeFile}
 echo "" >> ${readmeFile}
@@ -24,3 +26,5 @@ echo "" >> ${readmeFile}
 echo "Processing scripts:" >> ${readmeFile}
 echo "(@https://github.com/yigewu/${toolName}/tree/${batchName}):" >> ${readmeFile}
 echo "refer to main.sh for coordination of specific scripts for each step" >> ${readmeFile}
+
+cp ${readmeFile} ${subdeliverDir}

@@ -35,6 +35,12 @@ batchName=${11}
 ## identifier for the log file
 id=${12}
 
+## the name of github branch
+toolDirName=${13}
+
+## the suffix of clinical file
+clinFilesuffix=${14}
+
 ## user ID with permission to the input files
 uid=$(id -u)
 
@@ -44,6 +50,9 @@ gid="2001"
 ## the name of the file containing the gender map
 genderFile=${bamMapFile}"_"${bamType}"_"${t}"_"${c}"_gender_map.txt"
 
-bashCMD="tmux new-session -d -s "${scriptName}"_"${t}"_"${c}" 'docker run --user "${uid}":"${gid}" -v "${mainRunDir}":"${mainRunDir}" -v "${bamDir}":"${bamDir}" "${imageName}" "${binaryFile}" "${scriptDir}${scriptName}" "${t}" "${c}" "${mainRunDir}" "${batchbamMapFile}" "${genderFile}" "${batchName}" "${bamMapFile}" |& tee "${mainRunDir}"logs/"${scriptName}"_"${t}"_"${c}"_"${id}".log'" 
-echo $bashCMD
+mkdir -p ${mainRunDir}"logs/"
+bashCMD="tmux new-session -d -s "${toolDirName}"_"${scriptName}"_"${t}"_"${c}"_"${id}" 'docker run -v "${mainRunDir}":"${mainRunDir}" -v "${bamDir}":"${bamDir}" "${imageName}" "${binaryFile}" "${scriptDir}${scriptName}" "${t}" "${c}" "${mainRunDir}" "${batchbamMapFile}" "${genderFile}" "${batchName}" "${bamMapFile}" "${bamType}" "${clinFilesuffix}" |& tee "${mainRunDir}"logs/"${toolDirName}"_"${scriptName}"_"${t}"_"${c}"_"${id}".log'"
+#bashCMD="tmux new-session -d -s "${toolDirName}"_"${scriptName}"_"${t}"_"${c}" 'docker run --user "${uid}":"${gid}" -v "${mainRunDir}":"${mainRunDir}" -v "${bamDir}":"${bamDir}" "${imageName}" "${binaryFile}" "${scriptDir}${scriptName}" "${t}" "${c}" "${mainRunDir}" "${batchbamMapFile}" "${genderFile}" "${batchName}" "${bamMapFile}" ${bamType} |& tee "${mainRunDir}"logs/"${toolDirName}"_"${scriptName}"_"${t}"_"${c}"_"${id}".log'" 
+echo ${bashCMD}
+echo ""
 #$bashCMD

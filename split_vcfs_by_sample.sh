@@ -27,7 +27,10 @@ batchName=$6
 bamMapFile=$7
 runDir=${mainRunDir}"outputs/"${batchName}"/"${t}"_"${c}"/"
 outDir=${runDir}"vcfsbysample/"
-inVCF=${outDir}"del_cnv_genotype_"${t}"_"${c}"_"${mergeoption}".vcf"
+deliverDir=${mainRunDir}"deliverables/"
+subdeliverDir=${deliverDir}${batchName}"/"
+#inVCF=${outDir}"del_cnv_genotype_"${t}"_"${c}"_"${mergeoption}".vcf"
+correctedVCF=${outDir}"del_cnv_"${t}"_"${c}"_"${mergeoption}".vcf"
 mx="-Xmx6g"
 
 # For SVAltAlign, you must use the version of bwa compatible with Genome STRiP.
@@ -36,10 +39,13 @@ export PATH=${SV_DIR}/bwa:${PATH}
 export LD_LIBRARY_PATH=${SV_DIR}/bwa:${LD_LIBRARY_PATH}
 
 mkdir -p ${outDir} || exit 1
+mkdir -p ${deliverDir}
+mkdir -p ${subdeliverDir}
 
 cp $0 ${outDir}/
 
-
+#sed "s/##FORMAT=<ID=GL,Number=G,Type=Float/##FORMAT=<ID=GL,Number=G,Type=String/" ${inVCF} > ${outDir}"tmp"
+#sed "s/##FORMAT=<ID=GP,Number=G,Type=Float/##FORMAT=<ID=GP,Number=G,Type=String/" ${outDir}"tmp" > ${correctedVCF}
 # Run genotyping on the discovered sites.
 while read p; do
 	sampID=$(echo ${p} | awk -F ' ' '{print $1}')
@@ -55,9 +61,10 @@ while read p; do
 	java -jar ${SV_DIR}/lib/gatk/GenomeAnalysisTK.jar \
 		-T SelectVariants \
 		-R ${inputDir}${refFile} \
-		-V ${inVCF} \
+		-V ${correctedVCF} \
 		-o ${outDir}${outVCF} \
 		-sn ${sampID} \
 		|| exit 1
+	cp ${outDir}${outVCF} ${subdeliverDir}
 done<${inputDir}${genderMap}
 

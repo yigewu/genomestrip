@@ -31,10 +31,12 @@ mx="-Xmx6g"
 
 # input discovery vcf
 delVCF=${runDir}"delGenotype/del_genotype_"${t}"_"${c}".vcf"
-cnvVCF=${runDir}"cnvGenotype/cnv_genotype_"${t}"_"${c}".vcf"
+#cnvVCF=${runDir}"cnvGenotype/cnv_genotype_"${t}"_"${c}".vcf"
+cnvVCF=${runDir}"cnvDiscovery/cnvdiscovery_"${t}"_"${c}".vcf"
 
 ## output vcf file
-outVCF=${outDir}"del_cnv_genotype_"${t}"_"${c}"_"${mergeoption}".vcf"
+#outVCF=${outDir}"del_cnv_genotype_"${t}"_"${c}"_"${mergeoption}".vcf"
+outVCF=${outDir}"del_cnv_"${t}"_"${c}"_"${mergeoption}".vcf"
 
 # For SVAltAlign, you must use the version of bwa compatible with Genome STRiP.
 export SV_DIR=/opt/svtoolkit
@@ -42,17 +44,15 @@ export PATH=${SV_DIR}/bwa:${PATH}
 export LD_LIBRARY_PATH=${SV_DIR}/bwa:${LD_LIBRARY_PATH}
 
 classpath="${SV_DIR}/lib/SVToolkit.jar:${SV_DIR}/lib/gatk/GenomeAnalysisTK.jar:${SV_DIR}/lib/gatk/Queue.jar"
+gatkJar="/gatk/gatk.jar"
 
 mkdir -p ${outDir} || exit 1
 
 cp $0 ${outDir}/
 
 # Run genotyping on the discovered sites.
-java -jar ${SV_DIR}/lib/gatk/GenomeAnalysisTK.jar \
-	-T CombineVariants \
-	-R ${inputDir}/${refFile} \
-	--variant ${delVCF} \
-	--variant ${cnvVCF} \
-	-o ${outVCF} \
-	--genotypemergeoption ${mergeoption} \
+java -jar ${gatkJar} MergeVcfs \
+	-I ${delVCF} \
+	-I ${cnvVCF} \
+	-O ${outVCF} \
 	|| exit 1

@@ -62,6 +62,9 @@ fi
 clinDir="/diskmnt/Datasets/CPTAC/PGDAC/CPTAC_Biospecimens_Clinical_Data/CPTAC3_Clinical_Data/"
 clinFilesuffix="case.tsv"
 
+## version name of pipeline
+version="1.2"
+
 ## download/copy dependencies
 cm="bash get_dependencies.sh ${mainRunDir} ${bamMapDir} ${bamMapFile} ${clinicalDir} ${clinicalFile} ${refDir} ${refFile} ${refBundlegz} ${refBundle} ${clinDir} ${clinFilesuffix} ${cancerType}"
 ${cm}
@@ -147,6 +150,10 @@ for t in tumor normal; do
                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "split_vcfs_by_sample.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
         done<${cancerType}
 done
+
+## push scripts to github
+cm="bash push_git.sh ${batchName} ${version}"
+echo ${cm}
 
 ## clean up docker containers
 cm="bash clean_docker_containers.sh"

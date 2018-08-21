@@ -64,16 +64,16 @@ else
 fi
 
 ## extra file for gender information
-while read j
-do
-	genderDir=${clinDir}${j}"/"
-	cd ${genderDir}
-	caseFile=$(ls *${clinFilesuffix})
-	if [ -s ${inputDir}${caseFile} ]
-	then
-		echo "extra clinical file is available"
-	else
-		echo "extra clinical file is being copied"
-		cp ${genderDir}${caseFile} ${inputDir}${caseFile}
-	fi
-done<${cancerType}
+#while read j
+#do
+#	genderDir=${clinDir}${j}"/"
+#	cd ${genderDir}
+#	caseFile=$(ls *${clinFilesuffix})
+#	if [ -s ${inputDir}${caseFile} ]
+#	then
+#		echo "extra clinical file is available"
+#	else
+#		echo "extra clinical file is being copied"
+#		cp ${genderDir}${caseFile} ${inputDir}${caseFile}
+#	fi
+#done<${cancerType}

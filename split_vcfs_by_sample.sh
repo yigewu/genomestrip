@@ -55,7 +55,7 @@ while read p; do
 	if [ "${t}" == "tumor" ]; then
 		outVCF=${partID}".T.WGS.CNV.GenomeSTRiP.vcf"
 	fi
-	if [ "${t}" == "normal" ]; then
+	if [ "${t}" == "blood_normal" ]; then
 		outVCF=${partID}".N.WGS.CNV.GenomeSTRiP.vcf"
 	fi
 	java -jar ${SV_DIR}/lib/gatk/GenomeAnalysisTK.jar \

@@ -1,6 +1,6 @@
 CPTAC3 WGS CNV Pipeline (v1.2) overview:
 
-CPTAC3 batch#3 WGS BAM files were divided into 2 groups by tumor (16 LUAD tumors and 16 blood normal samples and by cancer types. Genome STRiP deletion discovery pipeline and CNV discovery pipeline implemented on 2 groups separately.
+CPTAC3 ccRCC batch#5 WGS BAM files were divided into 2 groups by tumor (24 ccRCC tumors and 24 blood normal samples and by cancer types. Genome STRiP deletion discovery pipeline and CNV discovery pipeline implemented on 2 groups separately.
 
 Genome STRiP deletion discovery pipeline used Genome STRiP 2.0 SVPreprocess, SVDiscovery, SVGenotyper Queue scripts to generate deletion calls targeting 100 to 1M bps.
 

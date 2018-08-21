@@ -63,6 +63,8 @@ java -cp ${classpath} ${mx} \
     -gatk ${SV_DIR}/lib/gatk/GenomeAnalysisTK.jar \
     --disableJobReport \
     -jobRunner ParallelShell \
+    --maximumNumberOfJobsToRunConcurrently 2 \
+    -resMemLimit 5 \
     -cp ${classpath} \
     -configFile ${SV_DIR}/conf/genstrip_parameters.txt \
     -tempDir ${SV_TMPDIR} \

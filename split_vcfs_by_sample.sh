@@ -55,9 +55,10 @@ while read p; do
 	if [ "${t}" == "tumor" ]; then
 		outVCF=${partID}".T.WGS.CNV.GenomeSTRiP.vcf"
 	fi
-	if [ "${t}" == "normal" ]; then
-		outVCF=${partID}".N.WGS.CNV.GenomeSTRiP.vcf"
-	fi
+        if [ "${t}" == "blood_normal" ]; then
+                outVCF=${partID}".N.WGS.CNV.GenomeSTRiP.vcf"
+        fi
+        echo ${outVCF}
 	java -jar ${SV_DIR}/lib/gatk/GenomeAnalysisTK.jar \
 		-T SelectVariants \
 		-R ${inputDir}${refFile} \

@@ -9,7 +9,7 @@ toolName="genomestrip"
 bamType="WGS"
 
 ## name of the output directory for different batches
-batchName="LUAD.b2"
+batchName="CPTAC3.LUAD.b3"
 
 ## the path to master directory containing "${toolName}" scripts, input dependencies and output directories
 mainRunDir="/diskmnt/Projects/CPTAC3CNV/"${toolName}"/"
@@ -18,10 +18,10 @@ mainScriptDir=${mainRunDir}${toolDirName}"/"
 inputDir=${mainRunDir}"inputs/"
 
 ## the path to the file containing BAM paths, patient ids, sample ids
-bamMapDir="/diskmnt/Projects/cptac/GDC_import/import.config/CPTAC3.b2.LUAD/"
+bamMapDir="/diskmnt/Projects/cptac/GDC_import/import.config/CPTAC3.LUAD.b3/"
 
 ## the name of the file containing BAM paths, patient ids, sample ids
-bamMapFile="CPTAC3.b2.LUAD.BamMap.WGS.dat"
+bamMapFile="CPTAC3.LUAD.b3.BamMap.dat"
 
 ## the master directory holding the BAMs to be processed
 bamDir="/diskmnt/Projects/cptac/GDC_import/data/"
@@ -45,10 +45,17 @@ refBundle="Homo_sapiens_assembly19"
 
 ## path to the file with gender info for patients
 clinicalDir=${inputDir}
-clinicalFile="CPTAC3.LUAD.b1-5.Demographics.dat"
+clinicalFile="CPTAC3.C325.Demographics.dat"
 
 ## the file containing the cancer types to be processed
 cancerType="cancer_types.txt"
+echo "LUAD" > ${cancerType}
+
+## the key word to search for tumor and normal BAM files used for this analysis
+sampleTypeFile="sample_types.txt"
+echo "tumor" > ${sampleTypeFile}
+echo "blood_normal" >> ${sampleTypeFile}
+#echo "tissue_normal" >> ${sampleTypeFile}
 
 ## tag for log file
 id=$1
@@ -71,85 +78,86 @@ ${cm}
 
 ## split BAM path file into batchs
 #cm="bash split_bam_path.sh ${mainRunDir} ${bamMapFile} ${bamType}"
-for i in tumor normal; do
-    while read j
-        do
-        grep ${i} ${inputDir}${bamMapFile} | grep ${j} | grep ${bamType} |  awk -F '\\s' '{print $6}' | awk -F 'import' '{print $1"import"$2}' > ${inputDir}${bamMapFile}"_"${bamType}"_"${i}"_"${j}".list"
-        done<${cancerType}
-done
+while read sample_type
+do
+    while read cancer_type
+    do
+        grep ${sample_type} ${inputDir}${bamMapFile} | grep ${cancer_type} | grep ${bamType} |  awk -F '\\s' '{print $6}' | awk -F 'import' '{print $1"import"$2}' > ${inputDir}${bamMapFile}"_"${bamType}"_"${sample_type}"_"${cancer_type}".list"
+    done<${cancerType}
+done<${sampleTypeFile}
 echo "split the BAMs map file!"
 
 ## generate gender map file
-for t in tumor normal; do
-	while read c
+while read sample_type
+do
+	while read cancer_type
 	do
-                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "create_gender_map.sh" ${t} ${c} ${batchName} ${id} ${toolDirName} ${clinFilesuffix}
+                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "create_gender_map.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName} ${clinFilesuffix}
         done<${cancerType}
-done
+done<${sampleTypeFile}
 
 ## run SVPreprocess pipeline
-for t in tumor normal; do
-        while read c
-        do
-		bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "preprocess.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
+while read sample_type; do
+        while read cancer_type; do
+		bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "preprocess.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName}
 	done<${cancerType}
-done
+done<${sampleTypeFile}
 
 ## wait until the last step is done
 ## run SVDiscovery pipeline
-for t in tumor normal; do
-        while read c; do
-                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "svDiscovery.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
+while read sample_type; do
+        while read cancer_type; do
+                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "svDiscovery.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName}
         done<${cancerType}        
-done
+done<${sampleTypeFile}
 
 ## wait until the last step is done
 ## run SVGenotype pipeline
-for t in tumor normal; do
-        while read c; do
-                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "delGenotype.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
+while read sample_type; do
+        while read cancer_type; do
+                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "delGenotype.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName}
         done<${cancerType}
-done
+done<${sampleTypeFile}
 
 ## wait until the last step is done
 ## run CNVDiscovery pipeline
-for t in tumor normal; do
-        while read c; do
-                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "cnvDiscovery.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
+while read sample_type; do
+       while read cancer_type; do
+                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "cnvDiscovery.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName}
         done<${cancerType}
-done
+done<${sampleTypeFile}
 
 ## wait until the last step is done
-for t in tumor normal; do
-        while read c; do
-                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "cnvGenotype.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
+while read sample_type; do
+        while read cancer_type; do
+                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "cnvGenotype.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName}
         done<${cancerType}
-done
+done<${sampleTypeFile}
 
 ## wait until the last step is done
 ## filter out variants that do not pass Per-sample genotype filter (FT_
-for t in tumor normal; do
-        while read c; do
-                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "filter_variants.sh" ${t} ${c} ${batchName} ${id} ${toolDirName} ${clinFilesuffix}
+while read sample_type; do
+        while read cancer_type; do
+                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "filter_variants.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName} ${clinFilesuffix}
         done<${cancerType}
-done
+done<${sampleTypeFile}
 
 echo "wait until the last step is done and run the below tmux command ~"
 ## run GATK CombineVariants
-for t in tumor normal; do
-        while read c; do
-                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${gatkImage} "/bin/bash" ${mainScriptDir} "combine_vcfs.sh" ${t} ${c} ${batchName} ${id} ${toolDirName} ${clinFilesuffix}
+while read sample_type; do
+        while read cancer_type; do
+                bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${gatkImage} "/bin/bash" ${mainScriptDir} "combine_vcfs.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName} ${clinFilesuffix}
         done<${cancerType}
-done
+done<${sampleTypeFile}
 
 ## wait until the last step is done
 ## run GATK SelectVariants
-for t in tumor normal; do
-        while read c; do
-##               bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${gatkImage} "/bin/bash" ${mainScriptDir} "split_vcfs_by_sample.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
-               bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "split_vcfs_by_sample.sh" ${t} ${c} ${batchName} ${id} ${toolDirName}
+while read sample_type; do
+        while read cancer_type; do
+##               bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${gatkImage} "/bin/bash" ${mainScriptDir} "split_vcfs_by_sample.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName}
+               bash run_tmux.sh ${mainRunDir} ${bamMapFile} ${bamType} ${bamDir} ${imageName} "/bin/bash" ${mainScriptDir} "split_vcfs_by_sample.sh" ${sample_type} ${cancer_type} ${batchName} ${id} ${toolDirName}
         done<${cancerType}
-done
+done<${sampleTypeFile}
 
 ## push scripts to github
 cm="bash push_git.sh ${batchName} ${version}"

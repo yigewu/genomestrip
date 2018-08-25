@@ -48,8 +48,7 @@ else
 		cat tmp/tmp_specimen | awk '{print $1"\tF"}' >> ${inputDir}${bamMapFile}"_"${bamType}"_"${t}"_"${c}"_gender_map.txt"
 	    fi
 	    if [ "$(cat tmp/tmp_gender)" != "Female" ] && [ "$(cat tmp/tmp_gender)" != "Male" ]; then
-		echo "grep the wrong column for gender"
-		cat tmp/tmp_case
+		echo "wrong gender info ("$(cat tmp/tmp_gender)") for case "$(cat tmp/tmp_case)" sample "$(cat tmp/tmp_specimen)
 	    fi
 	done < ${bamMapFile}"_"${bamType}"_"${t}"_"${c}".list"
 fi

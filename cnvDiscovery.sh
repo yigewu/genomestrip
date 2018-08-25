@@ -52,8 +52,7 @@ java -cp ${classpath} ${mx} \
     --disableJobReport \
     -jobRunner ParallelShell \
     -gatkJobRunner ParallelShell \
-    --maximumNumberOfJobsToRunConcurrently 2 \
-    -resMemLimit 5 \
+    -maxConcurrentRun 4 \
     -configFile ${SV_DIR}/conf/genstrip_parameters.txt \
     -tempDir ${SV_TMPDIR} \
     -R ${inputDir}${refFile} \

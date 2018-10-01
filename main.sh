@@ -9,7 +9,7 @@ toolName="genomestrip"
 bamType="WGS"
 
 ## name of the output directory for different batches
-batchName="CPTAC3.LUAD.b3"
+batchName="CPTAC3.LUAD.b4"
 
 ## the path to master directory containing "${toolName}" scripts, input dependencies and output directories
 mainRunDir="/diskmnt/Projects/CPTAC3CNV/"${toolName}"/"
@@ -18,10 +18,10 @@ mainScriptDir=${mainRunDir}${toolDirName}"/"
 inputDir=${mainRunDir}"inputs/"
 
 ## the path to the file containing BAM paths, patient ids, sample ids
-bamMapDir="/diskmnt/Projects/cptac/GDC_import/import.config/CPTAC3.LUAD.b3/"
+bamMapDir="/diskmnt/Projects/cptac/GDC_import/import.config/CPTAC3.LUAD.b4/"
 
 ## the name of the file containing BAM paths, patient ids, sample ids
-bamMapFile="CPTAC3.LUAD.b3.BamMap.dat"
+bamMapFile="CPTAC3.LUAD.b4.BamMap.dat"
 
 ## the master directory holding the BAMs to be processed
 bamDir="/diskmnt/Projects/cptac/GDC_import/data/"

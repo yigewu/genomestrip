@@ -1,7 +1,7 @@
-preprocess
-svDiscovery
-cnvDiscovery
-delGenotype
+preprocess	T
+svDiscovery	T
+cnvDiscovery	T	
+delGenotype	T
 cnvGenotype
 combine_vcfs
 split_vcfs_by_sample

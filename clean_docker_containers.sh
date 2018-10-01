@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker rm $(docker ps -a | grep '\sExited' | grep genome-strip)
+docker rm $(docker ps -a | grep 'Exited' | grep strip | awk '{print $1}')
